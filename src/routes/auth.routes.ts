@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login } from "../controllers/auth.controller";
+import { signUp, login } from "../controllers/auth.controller";
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /auth/register:
+ * /auth/signUp:
  *   post:
  *     summary: Registra um novo usuário
  *     tags: [Autenticação]
@@ -38,7 +38,7 @@ const router = express.Router();
  *       400:
  *         description: Falha ao registrar o usuário
  */
-router.post("/register", register);
+router.post("/signUp", signUp);
 
 /**
  * @swagger

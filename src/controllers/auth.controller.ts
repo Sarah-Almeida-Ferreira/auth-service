@@ -1,24 +1,22 @@
-import { registerUser, loginUser } from "../services/auth.service";
+import UserService from "../services/auth.service";
 import { Request, Response } from "express";
+import ErrorUtil from "../utils/error.util";
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
-    const user = await registerUser(req.body);
+    const user = await UserService.signUp(req.body);
     res.status(201).json(user);
   } catch (error) {
-    const { message } = error as Error;
-    res.status(400).json({ error: message });
+    res.status(400).json(ErrorUtil.parse(error));
   }
 };
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  const { email, password } = req.body;
-
   try {
-    const { user, token } = await loginUser(email, password);
-    res.json({ user, token });
+    const { email, password } = req.body;
+    const user = await UserService.login(email, password);
+    res.json(user);
   } catch (error) {
-    const { message } = error as Error;
-    res.status(400).json({ error: message });
+    res.status(400).json(ErrorUtil.parse(error));
   }
 };

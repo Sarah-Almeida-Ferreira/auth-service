@@ -1,26 +1,31 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db.config";
 
-export interface IUser {
-  id?: string;
+interface IUser {
+  id?: number;
   name: string;
   email: string;
   password: string;
-  role: string;
   createdAt: string;
   updatedAt: string;
+  confirmationCode?: string;
+  expiresAt?: string;
+  confirmed: boolean;
 }
 
-interface UserCreationAttributes extends Optional<IUser, "id" | "createdAt" | "updatedAt"> {}
+export interface IUserCreationAttributes
+  extends Optional<IUser, "id" | "createdAt" | "updatedAt"> {}
 
-class User extends Model<IUser, UserCreationAttributes> {
-  public readonly id!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public name!: string;
-  public email!: string;
-  public password!: string;
-  public role!: string;
+class User extends Model<IUser, IUserCreationAttributes> {
+  id!: number;
+  name!: string;
+  email!: string;
+  password!: string;
+  createdAt!: string;
+  updatedAt!: string;
+  confirmationCode?: string;
+  expiresAt?: string;
+  confirmed: boolean = false;
 }
 
 User.init(
@@ -39,9 +44,16 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    role: {
+    confirmationCode: {
       type: DataTypes.STRING,
-      allowNull: false,
+      field: "confirmation_code",
+    },
+    expiresAt: {
+      type: DataTypes.STRING,
+      field: "expires_at",
+    },
+    confirmed: {
+      type: DataTypes.BOOLEAN,
     },
     createdAt: {
       type: DataTypes.DATE,
